@@ -1,0 +1,47 @@
+@use "variables" as *;
+@use "mixins" as *;
+
+.container {
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex--center {
+  @include flex-center;
+}
+
+.rounded {
+  border-radius: $radius;
+}
+
+.shadow {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #f7f9fb;
+  color: #222;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}

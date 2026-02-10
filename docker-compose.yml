@@ -1,0 +1,54 @@
+services:
+  backend:
+    build: ./backend
+    container_name: emotion-backend
+    environment:
+      - POSTGRES_URL=postgresql+asyncpg://postgres:postgres@db:5432/emotion_chat
+      - REDIS_URL=redis://redis:6379/0
+      - HF_API_TOKEN=your_new_token_here
+      - JWT_SECRET=supersecretkey
+      - JWT_ALGORITHM=HS256
+    depends_on:
+      - db
+      - redis
+    command: ["./wait-for-db.sh", "db", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+    - "8000:8000"
+
+
+  redis:
+    image: redis:7-alpine
+    container_name: emotion-redis
+    ports:
+      - "6379:6379"
+
+  db:
+    image: postgres:16-alpine
+    container_name: emotion-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=emotion_chat
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@emotichat.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+
+
+volumes:
+  postgres_data:
+  pgadmin_data:

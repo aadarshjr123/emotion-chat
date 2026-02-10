@@ -1,0 +1,15 @@
+// src/assets/styles/main.scss
+// @import "variables";
+// @import "mixins";
+// @import "layout";
+// @import "chat";
+
+
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: "Inter", sans-serif;
+  background-color: $color-bg;
+  height: 100%;
+}

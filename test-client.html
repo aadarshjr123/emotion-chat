@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+  <body style="font-family: system-ui; max-width: 720px; margin: 24px auto">
+    <h2>Realtime Chat (Test Client)</h2>
+    <div
+      id="log"
+      style="
+        border: 1px solid #ddd;
+        padding: 12px;
+        height: 300px;
+        overflow: auto;
+      "
+    ></div>
+    <div style="margin-top: 12px">
+      <input id="user" placeholder="username" value="you" />
+      <input id="text" placeholder="type message..." style="width: 60%" />
+      <button id="send">Send</button>
+    </div>
+    <script>
+      const log = document.getElementById("log");
+      const ws = new WebSocket("ws://localhost:8000/ws");
+
+      ws.onmessage = (evt) => {
+        try {
+          const msg = JSON.parse(evt.data);
+          const line = document.createElement("div");
+          const emoji =
+            msg.emotion === "positive"
+              ? "😄"
+              : msg.emotion === "negative"
+              ? "😞"
+              : "😐";
+          line.textContent = `[${msg.user}] ${emoji} ${msg.text}`;
+          log.appendChild(line);
+          log.scrollTop = log.scrollHeight;
+        } catch {
+          const line = document.createElement("div");
+          line.textContent = evt.data;
+          log.appendChild(line);
+        }
+      };
+
+      document.getElementById("send").onclick = () => {
+        const user = document.getElementById("user").value || "anon";
+        const text = document.getElementById("text").value || "";
+        ws.send(JSON.stringify({ user, text }));
+        document.getElementById("text").value = "";
+      };
+    </script>
+  </body>
+</html>
